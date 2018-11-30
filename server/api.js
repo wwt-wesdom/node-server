@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const utils = require('./utils');
+const {redisClient} = require('./redisServer');
 router.get('/api/wwt.json', (req,res) => {
   res.send({
     data:[
@@ -25,11 +26,38 @@ router.post('/api/login.json',(req,res) => {
       msg: '用户名或密码缺失'
     })
   }else {
+    const token = utils.createToken({
+      id : 1,
+      phone: req.query.phoneNumber
+    });
     res.send({
       status: true,
+      token: token,
       msg: '登录成功'
     })
   }
+});
+
+router.post('/api/set-redis-first.json',(req,res)=>{
+  redisClient.set('node:wwt:'+req.user.id,JSON.stringify({id:1,phone:15737962939}),(error, response)=>{
+    if (!error){
+      res.send({status: true,msg:'OK'})
+    }else {
+      console.log(error);
+      res.send({status:false,msg:'存储到redis失败'})
+    }
+  });
+});
+
+router.get('/api/get-redis-first.json',(req,res)=>{
+  redisClient.get('node:wwt:'+ req.user.id,(error, response)=>{
+    if (!error){
+      res.send({status: true,data:JSON.parse(response),msg:'OK'})
+    }else {
+      console.log(error);
+      res.send({status:false,msg:'获取redis失败'})
+    }
+  });
 });
 
 router.get('/api/ali-token.json', async (req, res) => {

@@ -1,6 +1,5 @@
 const redis = require('redis');
-const client = redis.createClient();
-client.on('ready',function () {
-  console.log('ready');
-});
-module.exports = client;
+
+const  redisClient = redis.createClient(1721,'127.0.0.1',{db:1},{no_ready_check: true});
+
+module.exports = {redisClient};
