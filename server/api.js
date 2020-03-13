@@ -79,29 +79,5 @@ router.get('/api/get-redis-first.json',(req,res)=>{
   });
 });
 
-router.get('/api/ali-token.json', async (req, res) => {
-  try {
-    const tokenFromAli = await utils.getTokenFromAliSts();
-    res.send(tokenFromAli.Credentials);
-    /*
-    // const isExists = await utils.isExistsFromRedis('aliToken');
-    if (isExists) {
-      // const tokenFromRedis = await utils.getDataFromRedis('aliToken');
-      // res.send(tokenFromRedis.Credentials);
-    } else {
-      const tokenFromAli = await utils.getTokenFromAliSts();
-      // await utils.setDataToRedis('aliToken', tokenFromAli);
-      // await utils.setExpireToRedis('aliToken', 1000 * 60 * 60);
-      res.send(tokenFromAli.Credentials);
-    }*/
-  } catch (e) {
-    // const config = sendMailer.config(`用户:${req.session.userData.phone},请求阿里云上传服务临时token异常：`, JSON.stringify(e));
-    // sendMailer.send(config);
-    res.send({
-      status: false,
-      msg: '请求阿里云上传服务临时token异常'
-    })
-  }
-});
 
 module.exports = router;
